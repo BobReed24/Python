@@ -2,7 +2,6 @@ import time
 import os
 import sys
 import random
-import ast
 def calc():
     try:
         def start():
@@ -26,7 +25,11 @@ def calc():
                         time.sleep(1)
                     start()
                 elif op == 3:
-                    close()
+                    os.system('cls||clear')
+                    print('Program terminated')
+                    time.sleep(1)
+                    os.system('cls||clear')
+                    KeyboardInterrupt
                 else:
                     os.system('cls||clear')
                     print("Invalid Choice!")
@@ -95,18 +98,16 @@ def calc():
         def main():
             os.system('cls||clear')
             print(dashes)
-            print(f'Evaluation Calculator\n{dashes}\nType "exit()" to exit the program\n')
+            print(f'Evaluation Calculator\n{dashes}\nPress "ctrl+c" to exit the program\n')
             while True:
                 try:
-                    res = float(ast.literal_eval(input(">: ")))
+                    res = float(eval(input(">: ")))
                     print(res, "\n")
                 except (SyntaxError, NameError, TypeError, ValueError) as e:
                     print(f"Err: {e}")
-        def close():
-            exit()
         define()
     except KeyboardInterrupt:
         os.system('cls||clear')
         print("Program terminated by user\n")
-        exit()
+        KeyboardInterrupt
 calc()
