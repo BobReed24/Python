@@ -2,6 +2,7 @@ import time
 import os
 import sys
 import random
+import ast
 def calc():
     try:
         def start():
@@ -97,7 +98,7 @@ def calc():
             print(f'Evaluation Calculator\n{dashes}\nType "exit()" to exit the program\n')
             while True:
                 try:
-                    res = float(eval(input(">: ")))
+                    res = float(ast.literal_eval(input(">: ")))
                     print(res, "\n")
                 except (SyntaxError, NameError, TypeError, ValueError) as e:
                     print(f"Err: {e}")
