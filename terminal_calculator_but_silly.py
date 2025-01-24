@@ -106,7 +106,7 @@ def calc():
                 except (SyntaxError, NameError, TypeError, ValueError) as e:
                     print(f"Err: {e}")
         define()
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, EOFError):
         os.system('cls||clear')
         print("Program terminated by user\n")
         KeyboardInterrupt
