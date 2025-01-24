@@ -1,3 +1,16 @@
 numpy 
 sympy
 matplotlib
+datetime
+pyjokes
+requests
+Pillow
+Image
+ImageGrab
+gTTS
+keyboard
+key
+playsound
+pyttsx3
+SpeechRecognition
+openai
