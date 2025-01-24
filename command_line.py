@@ -4,18 +4,21 @@ def start():
     main()
 def main():
     try:
-        while True:
-            try:
+        try:
+            while True:
                 cur_dir = os.getcwd()
-                res = input(f"{cur_dir} (python) % ")
-                if "cd" in res:
-                    res = res.replace("cd ", "")
-                    os.chdir(res)
-                else:
-                    os.system(res)
-            except (SyntaxError, NameError, TypeError, ValueError) as e:
-                print(f"Err: {e}")
-    except KeyboardInterrupt:
-        print("")
-        main()
+                try:
+                    res = input(f"{cur_dir} (python) $ ")
+                    if "cd" in res:
+                        res = res.replace("cd ", "")
+                        os.chdir(res)
+                    else:
+                        os.system(res)
+                except (ValueError, TypeError, SyntaxError, NameError) as e:
+                    print(f"Err: {e}")
+        except KeyboardInterrupt:
+            print()
+            main()
+    except EOFError:
+        os.system('cls||clear')
 start()
