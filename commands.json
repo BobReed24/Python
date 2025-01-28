@@ -1,0 +1,10 @@
+[
+    {
+        "command_replacement": "cd ",
+        "original_command": "change_dir"
+    },
+    {
+        "command_replacement": "ls ",
+        "original_command": "list_files"
+    }
+]
