@@ -1,165 +1,155 @@
 import os
 import json
-
-def load_commands():
-    try:
-        with open('commands.json', 'r') as f:
-            commands = json.load(f)
-        return commands
-    except FileNotFoundError:
-        print("Err: 'commands.json' not found. Using default commands.")
-        return []
+import subprocess
+from termcolor import colored
 
 def start():
-    os.system('cls||clear')
+    global green
+    green = "green"
+    os.system("cls||clear")
+    print("Initializing")
+    ls_output=subprocess.Popen(["sudo", "apt-get", "-y", "install", "nvtop"])
+    ls_output.communicate()
+    os.system("cls||clear")
     main()
 
 def main():
-    commands = load_commands()
     try:
         while True:
             cur_dir = os.getcwd()
-            syscmd = input(f"{cur_dir} (python) $ ")
-            command = syscmd
+            print(colored(f"{cur_dir} ", green) + "(python) $ ", end="")
 
-            # Check if the command is in the loaded commands
-            for cmd in commands:
-                if command.startswith(cmd['original_command']):
-                    command = command.replace(cmd['original_command'], cmd['command_replacement'])
-                    break
+            syscmd = input("").lower()
+            command_parts = syscmd.split()  
+            command = command_parts[0]  
 
-            # Handle commands based on the replacement logic
-            if command.startswith('cd'):
-                command = command.replace("cd ", "")
-                os.chdir(command)
-            elif command.startswith('peek'):
-                command = command.replace("peek ", "")
-                os.system(f'ls {command}')
-            elif command.startswith('get.cwd'):
-                command = command.replace("get.cwd", "")
-                os.system('pwd')
-            elif command.startswith('branch'):
-                command = command.replace("branch", "")
-                os.system(f"ls {command}/*")
-            elif command.startswith('tree'):
+            if command == "cd":
+                if len(command_parts) > 1:
+                    os.chdir(command_parts[1])
+                else:
+                    print("Err: No directory specified")
+            elif command == "peek":
+                if len(command_parts) > 1:
+                    os.system(f"ls {command_parts[1]}")
+                else:
+                    os.system("ls")
+            elif command == "branch":
+                if len(command_parts) > 1:
+                    os.system(f"ls {command_parts[1]}/*")
+                else:
+                    print("Err: No argument specified")
+            elif command == "tree":
                 os.system("ls *")
-            elif command.startswith('task --show'):
-                command = command.replace(f"task --show ", "")
-                os.system(f'ps aux | grep {command}')
-            elif command.startswith('task -s'):
-                command = command.replace(f"task -s ", "")
-                os.system(f'ps aux | grep {command}')
-            elif command.startswith('admin'):
+            elif command == "task":
+                if len(command_parts) > 1 and command_parts[1] == "--show":
+                    os.system(f"ps aux | grep {" ".join(command_parts[2:])}")
+                elif len(command_parts) > 1 and command_parts[1] == "-s":
+                    os.system(f"ps aux | grep {" ".join(command_parts[2:])}")
+                else:
+                    print("Err: Incorrect arguments")
+            elif command == "admin":
                 osname = os.name
-                if osname == 'nt':
+                if osname == "nt":
                     print("Err: Command not available for Windows")
-                elif command.startswith('admin install'):
-                    command = command.replace("admin install ", "")
-                    os.system(f"sudo apt install -y {command}")
-                elif command.startswith('admin ubuntu'):
-                    command = command.replace("admin ubuntu ", "")
-                    os.system(f"sudo {command}")
+                elif len(command_parts) > 1 and command_parts[1] == "install":
+                    os.system(f"sudo apt install -y {" ".join(command_parts[2:])}")
+                elif len(command_parts) > 1 and command_parts[1] == "ubuntu":
+                    os.system(f"sudo {" ".join(command_parts[2:])}")
                 else:
                     print("Err: Incorrect arguments")
-            elif command.startswith('lib.use'):
-                command = command.replace("lib.use ", "")
-                os.system(f"{command}")
-            elif command.startswith('create'):
-                if command.startswith('create --directory'):
-                    command = command.replace("create --directory ", "")
-                    os.system(f"mkdir {command}")
-                elif command.startswith('create -d'):
-                    command = command.replace("create -d ", "")
-                    os.system(f"mkdir {command}")
-                elif command.startswith('create --file'):
-                    command = command.replace("create --file ", "")
-                    os.system(f"nano {command}")
-                elif command.startswith('create -f'):
-                    command = command.replace("create -f ", "")
-                    os.system(f"nano {command}")
+            elif command == "lib.use":
+                os.system(f"{" ".join(command_parts[1:])}")
+            elif command == "create":
+                if len(command_parts) > 1:
+                    if command_parts[1] in ["--directory", "-d"]:
+                        os.system(f"mkdir {" ".join(command_parts[2:])}")
+                    elif command_parts[1] in ["--file", "-f"]:
+                        os.system(f"nano {" ".join(command_parts[2:])}")
+                    else:
+                        print("Err: Incorrect arguments")
                 else:
-                    print("Err: Incorrect arguments")
-            elif command.startswith('remove'):
-                if command.startswith('remove --directory'):
-                    command = command.replace("remove --directory ", "")
-                    os.system(f"rm -r -d -f {command}")
-                elif 'remove -d' in command:
-                    command = command.replace("remove -d ", "")
-                    os.system(f"rm -r -d -f {command}")
-                elif 'remove --file' in command:
-                    command = command.replace("remove --file ", "")
-                    os.system(f"rm {command}")
-                elif 'remove -f' in command:
-                    command = command.replace("remove -f ", "")
-                    os.system(f"rm {command}")
+                    print("Err: No argument specified")
+            elif command == "remove":
+                if len(command_parts) > 1:
+                    if command_parts[1] in ["--directory", "-d"]:
+                        os.system(f"rm -r -d -f {" ".join(command_parts[2:])}")
+                    elif command_parts[1] in ["--file", "-f"]:
+                        os.system(f"rm {" ".join(command_parts[2:])}")
+                    else:
+                        print("Err: Incorrect arguments")
                 else:
-                    print("Err: Incorrect arguments")
-            elif 'read' in command:
-                command = command.replace("read ", "")
-                os.system(f"cat {command}")
-            elif 'modify' in command:
-                if 'modify --editfile' in command:
-                    command = command.replace("modify --editfile" , "")
-                    os.system(f"nano {command}")
-                elif 'modify -ef' in command:
-                    command = command.replace("modify -ef ", "")
-                    os.system(f"nano {command}")
-                elif 'modify --copyfile' in command:
-                    command = command.replace("modify --copy ", "")
-                    os.system(f"cp {command}")
-                elif 'modify -cf' in command:
-                    command = command.replace("modify -cf ", "")
-                    os.system(f"cp {command}")
-                elif 'modify --copydir' in command:
-                    command = command.replace("modify --copyir ", "")
-                    os.system(f"cp -r {command}")
-                elif 'modify -cd' in command:
-                    command = command.replace("modify -cd ", "")
-                    os.system(f"cp -r {command}")
-                elif 'modify --movefile' in command:
-                    command = command.replace("modify --movefile ", "")
-                    os.system(f"mv {command}")
-                elif 'modify -mf' in command:
-                    command = command.replace("modify -mf ", "")
-                    os.system(f"mv {command}")
-                elif 'modify --movedir' in command:
-                    command = command.replace("modify --movedir ", "")
-                    os.system(f"mv -r {command}")
-                elif 'modify -md' in command:
-                    command = command.replace("modify -md ", "")
-                    os.system(f"mv -r {command}")
+                    print("Err: No argument specified")
+            elif command == "read":
+                if len(command_parts) > 1:
+                    os.system(f"cat {" ".join(command_parts[1:])}")
                 else:
-                    print("Err: Incorrect arguments")
-            elif 'python' in command or 'py' in command:
+                    print("Err: No file specified")
+            elif command == "modify":
+                if len(command_parts) > 1:
+                    if command_parts[1] in ["--editfile", "-ef"]:
+                        os.system(f"nano {" ".join(command_parts[2:])}")
+                    elif command_parts[1] in ["--copyfile", "-cf"]:
+                        os.system(f"cp {" ".join(command_parts[2:])}")
+                    elif command_parts[1] in ["--copydir", "-cd"]:
+                        os.system(f"cp -r {" ".join(command_parts[2:])}")
+                    elif command_parts[1] in ["--movefile", "-mf"]:
+                        os.system(f"mv {" ".join(command_parts[2:])}")
+                    elif command_parts[1] in ["--movedir", "-md"]:
+                        os.system(f"mv {" ".join(command_parts[2:])}")
+                    else:
+                        print("Err: Incorrect arguments")
+                else:
+                    print("Err: No argument specified")
+            elif command in ["python", "py"]:
                 startpy()
-            elif 'kill' in command:
-                if 'kill --all' in command:
-                    command = command.replace("kill --all ", "")
-                    os.system(f"pkill -f {command}")
-                elif 'kill -a' in command:
-                    command = command.replace("kill -a ", "")
-                    os.system(f"pkill -f {command}")
-                elif 'kill -specific' in command:
-                    command = command.replace("kill --specific ", "")
-                    os.system(f"kill {command}")
-                elif 'kill -s' in command:
-                    command = command.replace("kill -s ", "")
-                    os.system(f"kill {command}")
+            elif command == "bash":
+                if len(command_parts) > 1:
+                    os.system(f"bash {" ".join(command_parts[1:])}")
                 else:
-                    print("Err: Incorrect arguments")
-            elif 'bash' in command:
-                command = command.replace("bash ", "")
-                os.system(f"bash {command}")
-            elif './' in command:
-                command = command.replace("./ ", "")
-                os.system(f"bash {command}")
+                    print("Err: No script specified")
+            elif command.startswith("./"):
+                os.system(f"bash {" ".join(command_parts)}")
+            elif command == "output":
+                if len(command_parts) > 1:
+                    os.system(f"echo {" ".join(command_parts[1:])}")
+                else:
+                    print("Err: String not specified")
+            elif command == "kill":
+                if len(command_parts) > 1:
+                    if command_parts[1] in ["--all", "-a"]:
+                        os.system(f"pkill -f {" ".join(command_parts[2:])}")
+                    elif command_parts[1] in ["--specific", "-s"]:
+                        os.system(f"kill {" ".join(command_parts[2:])}")
+                    else:
+                        print("Err: Incorrect arguments")
+                else:
+                    print("Err: No argument specified")
+            elif command.startswith("get."):
+                arg = command[4:].strip()  
+
+                if arg in ["cwd"]:
+                    os.system("pwd")
+                elif arg in ["rds"]:
+                    os.system("df -h")
+                elif arg in ["cpu"]:
+                    os.system("lscpu")
+                elif arg in ["ram"]:
+                    os.system("watch -n 5 free -m")
+                elif arg in ["gpu"]:
+                    os.system("nvtop")
+                elif arg in ["usr --current", "usr -c"]:
+                    os.system("whoami")
+                elif arg in ["usr --all", "-a"]:
+                    os.system("cut -d: -f1 /etc/passwd")
+                else:
+                    print("Err: Incorrect argument")
             else:
                 print(f"Err: Command '{command}' not found")
     except (FileNotFoundError, FileExistsError, NameError) as e:
         print(f"Err: {e}")
         main()
     except KeyboardInterrupt:
-        print('')
+        print("")
         main()
 
 def startpy():
