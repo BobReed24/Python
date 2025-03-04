@@ -14,3 +14,4 @@ playsound
 pyttsx3
 SpeechRecognition
 openai
+pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
