@@ -15,7 +15,7 @@ def chat_with_ai(model):
 
             print("AI: ", end='', flush=True)
             try:
-                for token in model.generate(user_input, max_tokens=8096, streaming=True):
+                for token in model.generate(user_input, max_tokens=8096, temp=256, n_batch=16, repeat_penalty=8, streaming=True):
                     print(token, end='', flush=True)
                 print()  
             except Exception as e:
