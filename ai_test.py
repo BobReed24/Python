@@ -1,17 +1,33 @@
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import os
+from gpt4all import GPT4All
+from pathlib import Path
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def clear_console():
+    """Clear the console screen."""
+    os.system("cls" if os.name == "nt" else "clear")
 
-model_name = "gpt-4-all"  
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+def chat_with_ai(model):
+    """Start a chat session with the AI model."""
+    with model.chat_session():
+        while True:
+            user_input = input("\nYou: ")
+            if user_input.lower() in ['exit', 'quit']:
+                print("Exiting the chat. Goodbye!")
+                break
 
-input_text = "Once upon a time"
-inputs = tokenizer(input_text, return_tensors="pt").to(device)
+            print("AI: ", end='', flush=True)
+            try:
+                for token in model.generate(user_input, streaming=True):
+                    print(token, end='', flush=True)
+                print()  
+            except Exception as e:
+                print(f"\nError: {e}")
 
-with torch.no_grad():
-    outputs = model.generate(**inputs, max_length=50)
+def main():
+    """Main function to run the chat application."""
+    model = GPT4All("gpt4all-13b-snoozy-q4_0.gguf", device="cuda")
+    clear_console()
+    chat_with_ai(model)
 
-output_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-print(output_text)
+if __name__ == "__main__":
+    main()
