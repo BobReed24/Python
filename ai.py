@@ -25,7 +25,7 @@ def chat_with_ai(model):
 
             try:
                 response = ""
-                for token in model.generate(full_input, streaming=True, max_tokens=32767, temp=0.7, repeat_penalty=4.0, repeat_last_n=64):
+                for token in model.generate(full_input, streaming=True, max_tokens=32767):
                     response += token
 
                     if 'quitsirsur' in response.lower():
