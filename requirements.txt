@@ -13,6 +13,8 @@ key
 playsound
 pyttsx3
 SpeechRecognition
+transformers
+diffusion
 openai
 gpt4all
 gpt4all[cuda]
