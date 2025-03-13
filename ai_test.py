@@ -10,7 +10,7 @@ def clear_console():
 
 def chat_with_ai(model):
     """Start a chat session with the AI model."""
-    context= "You write code and only code without using comments and without using multiline comments just the raw. No Commentary!"
+    context= "You write code and only code without using comments and without using multiline comments just the raw. No Commentary! No codeblocks! DO NOT USE ```!"
 
     with model.chat_session():
         user_input = open("input.txt", 'r')
