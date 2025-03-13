@@ -2,7 +2,8 @@ import os
 from gpt4all import GPT4All
 from pathlib import Path
 
-choice = 1
+choice = 2
+output = "output.cpp"
 
 def clear_console():
     """Clear the console screen."""
@@ -36,7 +37,7 @@ def chat_with_ai(model):
                     os.system("cls||clear")
                     print("The bot blocked you.")
                     exit()
-                with open("output.txt", 'a') as f:
+                with open(output, 'a') as f:
                     f.write(token + '')
                     f.flush()
         except Exception as e:
