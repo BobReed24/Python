@@ -19,3 +19,4 @@ openai
 gpt4all
 gpt4all[cuda]
 cuda-python
+sounddevice
