@@ -38,11 +38,15 @@ def play_tone(frequency, duration):
     sd.wait()
 
 while True:
-    text = input("Enter a note (like c4, f#3) or 'quit' to exit: ").lower()
+    text = input("Enter notes (like a5 d5 a5 d5) or 'quit' to exit: ").lower()
     if text == "quit":
         break
 
-    if text in notes:
-        play_tone(notes[text], duration)
-    else:
-        print("Invalid note. Use format like c4, g#5, etc.")
+    note_list = text.split()
+    
+    for note in note_list:
+        if note in notes:
+            play_tone(notes[note], duration)
+        else:
+            print(f"Invalid note: {note}. Use format like c4, g#5, etc.")
+            break
