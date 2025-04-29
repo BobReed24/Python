@@ -3,7 +3,9 @@ from gpt4all import GPT4All
 from pathlib import Path
 
 choice = 2
-output = "output.cpp"
+inputfile = input("Input>: ")
+output = input("Output>: ")
+main()
 
 def clear_console():
     """Clear the console screen."""
@@ -11,10 +13,10 @@ def clear_console():
 
 def chat_with_ai(model):
     """Start a chat session with the AI model."""
-    context= "You write code and only code without using comments and without using multiline comments just the raw. No Commentary! No codeblocks! DO NOT USE ```!"
+    context= "Are a helpful assistant."
 
     with model.chat_session():
-        user_input = open("input.txt", 'r')
+        user_input = open(inputfile, 'r')
         user_input = user_input.read()
         if user_input.lower() in ['exit', 'quit']:
             print("Exiting the chat. Goodbye!")
@@ -59,5 +61,3 @@ def main():
     clear_console()
     chat_with_ai(model)
 
-if __name__ == "__main__":
-    main()
