@@ -55,5 +55,5 @@ def calculate_pi_to_file(file_path, digits, chunk_size=1000):
 
 output_file = "pi_digits.txt"
 # Total digits to print
-total_digits = 100000  
+total_digits = float('inf') # Default is infinity 
 calculate_pi_to_file(output_file, total_digits)
