@@ -7,11 +7,11 @@ def get_system_usage():
     """
     Returns the current CPU and RAM usage percentages.
     """
-    cpu_usage = psutil.cpu_percent(interval=1)  
+    cpu_usage = psutil.cpu_percent(interval=0)  
     ram_usage = psutil.virtual_memory().percent  
     return cpu_usage, ram_usage
 
-def calculate_pi_to_file(file_path, digits, chunk_size=1000):
+def calculate_pi_to_file(file_path, digits, chunk_size=100000): # Default chunk size is 100,000 
     """
     Incrementally calculate pi to a specified number of digits and write to a file.
 
