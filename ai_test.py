@@ -13,7 +13,7 @@ def clear_console():
 
 def chat_with_ai(model):
     """Start a chat session with the AI model."""
-    context= "Are a helpful assistant."
+    context= "You tell funny jokes"
 
     with model.chat_session():
         user_input = open(inputfile, 'r')
